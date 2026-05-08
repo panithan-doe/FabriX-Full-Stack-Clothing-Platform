@@ -1,30 +1,18 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchOverlayStore } from '@/store/useSearchOverlayStore'
 
 export default function Header() {
 
   const pathname = usePathname();
-  const router = useRouter();
 
-  // const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // const handleHoverEnter = (path: string) => {
-  //   if (pathname !== path) {
-  //     hoverTimeoutRef.current = setTimeout(() => {
-  //       router.push(path);
-  //     }, 200);
-  //   }
-  // }
-
-  // const handleHoverLeave = () => {
-  //   // ถ้าเอาเมาส์ออกก่อน 400ms ให้ยกเลิกการเปลี่ยนหน้าทันที!
-  //   if (hoverTimeoutRef.current) {
-  //     clearTimeout(hoverTimeoutRef.current);
-  //   }
-  // }
+  const { isOpen } = useSearchOverlayStore()
+  
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  const [currentHash, setCurrentHash] = useState('')
 
   const menus = [
     // { name: 'collection', path: '/', submenu: true },
@@ -32,7 +20,6 @@ export default function Header() {
     { name: 'men', path: '/men' },
     { name: 'child', path: '/child' },
   ]
-
   
   return (
     <header className="fixed top-0 z-50 w-full bg-transparent">
@@ -50,7 +37,26 @@ export default function Header() {
         
         <div className="hidden lg:flex lg:gap-x-12">
           {menus.map((item) => {
-            const isActive = pathname === item.path ? true : false;
+            // const isActive = pathname === item.path ? true : false;
+
+            const isActive = isOverlayOpen 
+              ? currentHash === `#${item.name}` 
+              : pathname === item.path;
+            
+            // const textColor = isOverlayOpen? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-900'
+
+            
+            let textColor = '';
+            let borderColor = 'border-transparent'; // สีเส้นใต้เริ่มต้น (โปร่งใส)
+  
+            if (isOpen) {
+              textColor = isActive ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700';
+              borderColor = isActive ? 'border-gray-900' : 'border-transparent';
+            } else {
+              textColor = isActive ? 'text-white' : 'text-white hover:text-white';
+              borderColor = isActive ? 'border-white' : 'border-transparent';
+            }
+
 
             return (
               <Link 
@@ -58,9 +64,7 @@ export default function Header() {
                 href={item.path} 
                 // onMouseEnter={() => handleHoverEnter(item.path)}
                 // onMouseLeave={() => handleHoverLeave()} // 👈 เพิ่ม onMouseLeave ตรงนี้
-                className= {`font-semibold text-white pb-2 hover:text-black ${
-                  isActive ? 'border-b-2' : ''
-                }`}
+                className={`font-semibold pb-2 border-b-2 transition-colors duration-200 ${borderColor} ${textColor}`}
                 >
                   {item.name.toUpperCase()}
               </Link>
