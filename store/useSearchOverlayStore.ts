@@ -12,12 +12,15 @@ interface SearchOverlayState {
 export const useSearchOverlayStore = create<SearchOverlayState>((set) => ({
   isOpen: false,
   activeGender: 'women',
+  
   toggleOverlay: () => set((state) => ({ 
     isOpen: !state.isOpen
   })),
+  
   setIsOpen: (status) => set({ 
     isOpen: status
   }),
+  
   setActiveGender: (gender) => set({ 
     activeGender: gender
   })

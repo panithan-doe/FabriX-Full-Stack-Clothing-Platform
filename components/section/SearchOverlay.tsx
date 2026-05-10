@@ -5,19 +5,52 @@ import { usePathname } from 'next/navigation'
 import { SearchIcon, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchOverlayStore } from '@/store/useSearchOverlayStore'
+import Image from 'next/image'
+
+
+const categoriesData = {
+  // women: [
+  //   { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/women-shirts.avif' },
+  //   { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/women-bottoms.avif'  },
+  //   { slug: 'skirts', title: 'SKIRTS', image: '/category-icons/women-skirts.avif'  },
+  //   { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/women-outerwear.avif'  },
+  // ],
+  // men: [
+  //   { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/men-shirts.avif' },
+  //   { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-bottoms.avif'  },
+  //   { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/men-outerwear.avif'  },
+  // ],
+  // child: [
+  //   { slug: 'tops', title: 'TOPS', image: '/category-icons/child-tops.avif'  },
+  //   { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/childs-bottoms.avif'  }, 
+  // ]
+  women: [
+    { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/men-shirts.avif' },
+    { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-shirts.avif'  },
+    { slug: 'skirts', title: 'SKIRTS', image: '/category-icons/men-shirts.avif'  },
+    { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/men-shirts.avif'  },
+  ],
+  men: [
+    { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/men-shirts.avif' },
+    { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-shirts.avif'  },
+    { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/men-shirts.avif'  },
+  ],
+  child: [
+    { slug: 'tops', title: 'TOPS', image: '/category-icons/men-shirts.avif'  },
+    { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-shirts.avif'  }, 
+  ]
+}
 
 export default function SearchOverlay() {
   
   const pathname = usePathname()
-  const currentGender = pathname === '/' ? 'women' : pathname.replace('/', '')
   const { isOpen, toggleOverlay, setIsOpen } = useSearchOverlayStore()
 
+  const pathSegment = pathname.split('/')[1]; 
+  const isMenOrChild = pathSegment === 'men' || pathSegment === 'child';
+  const currentGender = isMenOrChild ? pathSegment : 'women';
 
-  const categories = [
-    { slug: 'tops', title: 'เสื้อทั่วไป' },
-    { slug: 'bottoms', title: 'กางเกง' },
-    { slug: 'outerwear', title: 'เสื้อตัวนอก' },
-  ]
+  const categories = categoriesData[currentGender];
 
   return (
     <>
@@ -43,22 +76,27 @@ export default function SearchOverlay() {
           
           <div className="max-w-5xl mx-auto w-full pt-32 px-6">
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              
               {categories.map((cat) => {
-                // 💡 การคำนวณ Path ที่ถูกต้องและเป็น Absolute Path (ใส่ / นำหน้าเสมอ)
-                // - ถ้าเป็น women -> /tops
-                // - ถ้าเป็น men -> /men/tops
-                const targetHref = currentGender === 'women' 
-                  ? `/${cat.slug}` 
-                  : `/${currentGender}/${cat.slug}`;
+                const targetHref = `/${currentGender}/${cat.slug}`;
 
                 return (
                   <Link
                     key={cat.slug}
-                    href={targetHref} // 👈 ใช้ Path ที่คำนวณมาอย่างแม่นยำ
+                    href={targetHref}
                     onClick={() => setIsOpen(false)}
-                    className="block p-8 bg-gray-50 hover:bg-gray-100 text-xl font-semibold rounded-xl text-center border"
+                    className="flex flex-row p-4 text-sm text-start items-center justify-start text-gray-900"
                   >
+                    <div className="relative w-12 h-12 mr-4">
+                      <Image 
+                        src={cat.image} 
+                        alt={cat.title}
+                        fill // สั่งให้รูปขยายเต็ม div ตัวแม่ (w-24 h-24)
+                        className="object-contain" // ป้องกันรูปเบี้ยว ให้มันย่อขยายตามสัดส่วนจริง
+                      />
+                    </div>
                     {cat.title}
                   </Link>
                 )
