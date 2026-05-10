@@ -6,40 +6,9 @@ import { SearchIcon, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchOverlayStore } from '@/store/useSearchOverlayStore'
 import Image from 'next/image'
+import { categoriesData } from '@/lib/constants'
 
 
-const categoriesData = {
-  // women: [
-  //   { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/women-shirts.avif' },
-  //   { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/women-bottoms.avif'  },
-  //   { slug: 'skirts', title: 'SKIRTS', image: '/category-icons/women-skirts.avif'  },
-  //   { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/women-outerwear.avif'  },
-  // ],
-  // men: [
-  //   { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/men-shirts.avif' },
-  //   { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-bottoms.avif'  },
-  //   { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/men-outerwear.avif'  },
-  // ],
-  // child: [
-  //   { slug: 'tops', title: 'TOPS', image: '/category-icons/child-tops.avif'  },
-  //   { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/childs-bottoms.avif'  }, 
-  // ]
-  women: [
-    { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/men-shirts.avif' },
-    { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-shirts.avif'  },
-    { slug: 'skirts', title: 'SKIRTS', image: '/category-icons/men-shirts.avif'  },
-    { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/men-shirts.avif'  },
-  ],
-  men: [
-    { slug: 'shirts', title: 'T-SHIRTS & SHIRTS', image: '/category-icons/men-shirts.avif' },
-    { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-shirts.avif'  },
-    { slug: 'outerwear', title: 'OUTERWEAR', image: '/category-icons/men-shirts.avif'  },
-  ],
-  child: [
-    { slug: 'tops', title: 'TOPS', image: '/category-icons/men-shirts.avif'  },
-    { slug: 'bottoms', title: 'BOTTOMS', image: '/category-icons/men-shirts.avif'  }, 
-  ]
-}
 
 export default function SearchOverlay() {
   
@@ -76,7 +45,7 @@ export default function SearchOverlay() {
           
           <div className="max-w-5xl mx-auto w-full pt-32 px-6">
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               
               
               {categories.map((cat) => {

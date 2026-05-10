@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchOverlayStore } from '@/store/useSearchOverlayStore'
+import { div } from 'framer-motion/client'
 
 export default function Header() {
 
@@ -11,8 +12,9 @@ export default function Header() {
 
   const { isOpen } = useSearchOverlayStore()
   
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false)
+  // const [isOverlayOpen, setIsOverlayOpen] = useState(false)
   const [currentHash, setCurrentHash] = useState('')
+
 
   const menus = [
     // { name: 'collection', path: '/', submenu: true },
@@ -20,6 +22,14 @@ export default function Header() {
     { name: 'men', path: '/men' },
     { name: 'child', path: '/child' },
   ]
+
+  const menusDisplay = () => {
+    if (isOpen || pathname === '/' || pathname === '/men' || pathname === '/child') {
+      return true
+    } else {
+      return false
+    }
+  }
   
   return (
     <header className="fixed top-0 z-50 w-full bg-transparent">
@@ -35,16 +45,15 @@ export default function Header() {
           </Link>
         </div>
         
-        <div className="hidden lg:flex lg:gap-x-12">
+        
+
+        { menusDisplay() &&
+       
+          <div className="hidden lg:flex lg:gap-x-12">
           {menus.map((item) => {
-            // const isActive = pathname === item.path ? true : false;
-
-            const isActive = isOverlayOpen 
-              ? currentHash === `#${item.name}` 
-              : pathname === item.path;
             
-            // const textColor = isOverlayOpen? 'text-gray-600 hover:text-gray-900' : 'text-white hover:text-gray-900'
-
+            const pathCheck = `/${pathname.split('/')[1]}` === '/women' ? '/' : `/${pathname.split('/')[1]}`
+            const isActive = pathCheck === item.path
             
             let textColor = '';
             let borderColor = 'border-transparent'; // สีเส้นใต้เริ่มต้น (โปร่งใส)
@@ -61,16 +70,23 @@ export default function Header() {
             return (
               <Link 
                 key={item.path}
-                href={item.path} 
-                // onMouseEnter={() => handleHoverEnter(item.path)}
-                // onMouseLeave={() => handleHoverLeave()} // 👈 เพิ่ม onMouseLeave ตรงนี้
+                href={item.path}
+                onClick={(e) => {
+                  if (isOpen) {
+                    e.preventDefault()
+                  }
+                }} 
                 className={`font-semibold pb-2 border-b-2 transition-colors duration-200 ${borderColor} ${textColor}`}
                 >
                   {item.name.toUpperCase()}
               </Link>
-          )})}
-          
-        </div>
+            )})}
+            
+          </div>
+        }
+
+
+
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link href="#" className="text-sm/6 font-semibold text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
